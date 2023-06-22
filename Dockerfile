@@ -12,8 +12,6 @@ RUN npm install
 # Copy the rest of the application code to the working directory
 COPY . .
 
-ENV MONGODB_URI=<your-mongodb-uri>
-
 
 # Expose a port (if your app listens on a specific port)
 EXPOSE 3000
