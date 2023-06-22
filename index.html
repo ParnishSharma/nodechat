@@ -36,9 +36,7 @@
 </button>
 </div>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
-<script src="/socket.io/socket.io.js"></script>
 <script>
   $(document).ready(() => {
     $("#send").click(() => {
@@ -51,100 +49,101 @@
     // Rest of the code...
   });
 
-      function addMessages(message) {
-        $("#messages").append(`
-          <h4>${message.name}</h4>
-          <p>${message.message}</p>
-        `);
+  function addMessages(message) {
+    $("#messages").append(`
+      <h4>${message.name}</h4>
+      <p>${message.message}</p>
+    `);
+  }
+
+  function getMessages() {
+    $.get('https://nochapp.vercel.app/messages', (data) => {
+      data.forEach(addMessages);
+    });
+  }
+
+  function sendMessage(message) {
+    $.post('https://nochapp.vercel.app/messages', message, () => {
+      $("#name").val(''); // Clear the name input field
+      $("#message").val(''); // Clear the message textarea
+      getMessages(); // Retrieve updated messages after saving
+    });
+  }
+
+  $(document).ready(() => {
+    // Rest of the code...
+    $("#delete").click(() => {
+      deleteChat();
+    });
+  });
+
+  function deleteChat() {
+    $.ajax({
+      url: 'https://nochapp.vercel.app/messages',
+      type: 'DELETE',
+      success: () => {
+        $("#messages").empty();
+      },
+      error: (err) => {
+        console.error(err);
       }
-      
-      function getMessages() {
-        $.get('https://nochapp-1mrt3f7zw-parnishsharma.vercel.app/messages', (data) => {
-          data.forEach(addMessages);
-        });
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    var scrollToTopButton = document.getElementById("scrollToTopButton");
+
+    // Show the button when user scrolls beyond a certain point
+    window.addEventListener("scroll", function() {
+      if (window.pageYOffset > 100) {
+        scrollToTopButton.classList.add("show");
+      } else {
+        scrollToTopButton.classList.remove("show");
       }
-      
-      function sendMessage(message) {
-        $.post('https://nochapp-1mrt3f7zw-parnishsharma.vercel.app/messages', message, () => {
-          $("#name").val(''); // Clear the name input field
-          $("#message").val(''); // Clear the message textarea
-          getMessages(); // Retrieve updated messages after saving
-        });
-      }
-      
-      $(document).ready(() => {
-        // Rest of the code...
-        $("#delete").click(() => {
-          deleteChat();
-        });
+    });
+
+    // Scroll to top when the button is clicked
+    scrollToTopButton.addEventListener("click", function() {
+      window.scrollTo({
+        top: 0,
+        behavior: "instant"
       });
-    
-      function deleteChat() {
-        $.ajax({
-          url: 'https://nochapp-1mrt3f7zw-parnishsharma.vercel.app/messages',
-          type: 'DELETE',
-          success: () => {
-            $("#messages").empty(); 
-          },
-          error: (err) => {
-            console.error(err);
-          }
-        });
-      }
-      document.addEventListener("DOMContentLoaded", function() {
-        var scrollToTopButton = document.getElementById("scrollToTopButton");
-      
-        // Show the button when user scrolls beyond a certain point
-        window.addEventListener("scroll", function() {
-          if (window.pageYOffset > 100) {
-            scrollToTopButton.classList.add("show");
-          } else {
-            scrollToTopButton.classList.remove("show");
-          }
-        });
-      
-        // Scroll to top when the button is clicked
-        scrollToTopButton.addEventListener("click", function() {
-          window.scrollTo({
-            top: 0,
-            behavior: "instant"
-          });
-        });
+    });
+  });
+
+  // Handle search form submission
+  $("#searchForm").submit((e) => {
+    e.preventDefault(); // Prevent form submission
+
+    // Get the search query from the input field
+    const searchQuery = $("#searchInput").val().trim();
+
+    // Call the searchMessages function to filter and display the matching messages
+    searchMessages(searchQuery);
+  });
+
+  function searchMessages(query) {
+    // Clear the previous search results
+    $("#messages").empty();
+
+    // Send a GET request to retrieve the filtered messages
+    $.get('https://nochapp.vercel.app/messages', (data) => {
+      // Filter the messages based on the search query
+      const filteredMessages = data.filter((message) => {
+        // Perform case-insensitive search on both the name and message content
+        const nameMatch = message.name.toLowerCase().includes(query.toLowerCase());
+        const messageMatch = message.message.toLowerCase().includes(query.toLowerCase());
+        return nameMatch || messageMatch;
       });
 
-        // Handle search form submission
-        $("#searchForm").submit((e) => {
-          e.preventDefault(); // Prevent form submission
-      
-          // Get the search query from the input field
-          const searchQuery = $("#searchInput").val().trim();
-      
-          // Call the searchMessages function to filter and display the matching messages
-          searchMessages(searchQuery);
-        });
-      
-      function searchMessages(query) {
-        // Clear the previous search results
-        $("#messages").empty();
-      
-        // Send a GET request to retrieve the filtered messages
-        $.get('https://nochapp-1mrt3f7zw-parnishsharma.vercel.app/messages', (data) => {
-          // Filter the messages based on the search query
-          const filteredMessages = data.filter((message) => {
-            // Perform case-insensitive search on both the name and message content
-            const nameMatch = message.name.toLowerCase().includes(query.toLowerCase());
-            const messageMatch = message.message.toLowerCase().includes(query.toLowerCase());
-            return nameMatch || messageMatch;
-          });
-      
-          // Display the filtered messages
-          filteredMessages.forEach(addMessages);
-        });
-      }
-      
-      
-      var socket = io('https://nochapp-1mrt3f7zw-parnishsharma.vercel.app');
-      socket.on('message', addMessages);
+      // Display the filtered messages
+      filteredMessages.forEach(addMessages);
+    });
+  }
+
+
+  var socket = io('https://nochapp.vercel.app');
+  socket.on('message', addMessages);
 </script>
 </body>
 </html>

@@ -9,13 +9,12 @@ app.use(express.static(__dirname));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-var Message = mongoose.model('Message', { name: String, message: String });
+var Message = mongoose.model('Message', new mongoose.Schema({ name: String, message: String }), 'messages');
 
-
-const dbUrl =process.env.MONGODB_URI;
+const dbUrl = process.env.MONGODB_URI;
 
 mongoose
-  .connect(dbUrl)
+  .connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log('MongoDB connected');
   })
@@ -23,10 +22,10 @@ mongoose
     console.error('MongoDB connection error:', err);
   });
 
-
 app.get('/messages', (req, res) => {
   Message.find({})
     .then((messages) => {
+      res.header('Content-Type', 'application/json');
       res.send(messages);
     })
     .catch((err) => {
@@ -60,14 +59,12 @@ app.delete('/messages', (req, res) => {
     });
 });
 
-
-
-var server = app.listen(3000, () => {
+const server = app.listen(process.env.PORT || 3000, () => {
   console.log('Server is running at port', server.address().port);
-  
+
   io.on('connection', (socket) => {
     console.log('A user is connected');
-  
+
     socket.on('disconnect', () => {
       console.log('A user has disconnected');
     });
