@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="navbar navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand">Nocha</a>
+      <ul>
+       <a href="contact.html"><li>contact me</li></a>
+      </ul>
+
+      <form id="searchForm" class="d-flex">
+        <input id="searchInput" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button id="searchButton" class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+  </nav>
+<div class="container">
+ <br>
+ <div class="jumbotron">
+ <h1 class="display-4">LET'S CHAT</h1>
+ <br>
+ <input id="name" class="form-control" placeholder="Name">
+ <br>
+ <textarea id="message" class="form-control" placeholder="Your Message Here"></textarea>
+ <br>
+ <button id="send" class="btn btn-success">Send</button>
+ <button id="delete" class="btn btn-danger">Delete Chat</button>
+ <div id="messages"></div>
+ <button id="scrollToTopButton" class="btn btn-primary">
+  <i class="fas fa-chevron-up"></i> 
+</button>
+</div>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  $(document).ready(() => {
+    $("#send").click(() => {
+      const message = {
+        name: $("#name").val(),
+        message: $("#message").val()
+      };
+      sendMessage(message);
+    });
+    // Rest of the code...
+  });
+
+      function addMessages(message) {
+        $("#messages").append(`
+          <h4>${message.name}</h4>
+          <p>${message.message}</p>
+        `);
+      }
+      
+      function getMessages() {
+        $.get('http://localhost:3000/messages', (data) => {
+          data.forEach(addMessages);
+        });
+      }
+      
+      function sendMessage(message) {
+        $.post('http://localhost:3000/messages', message, () => {
+          $("#name").val(''); // Clear the name input field
+          $("#message").val(''); // Clear the message textarea
+          getMessages(); // Retrieve updated messages after saving
+        });
+      }
+      
+      $(document).ready(() => {
+        // Rest of the code...
+        $("#delete").click(() => {
+          deleteChat();
+        });
+      });
+    
+      function deleteChat() {
+        $.ajax({
+          url: 'http://localhost:3000/messages',
+          type: 'DELETE',
+          success: () => {
+            $("#messages").empty(); 
+          },
+          error: (err) => {
+            console.error(err);
+          }
+        });
+      }
+      document.addEventListener("DOMContentLoaded", function() {
+        var scrollToTopButton = document.getElementById("scrollToTopButton");
+      
+        // Show the button when user scrolls beyond a certain point
+        window.addEventListener("scroll", function() {
+          if (window.pageYOffset > 100) {
+            scrollToTopButton.classList.add("show");
+          } else {
+            scrollToTopButton.classList.remove("show");
+          }
+        });
+      
+        // Scroll to top when the button is clicked
+        scrollToTopButton.addEventListener("click", function() {
+          window.scrollTo({
+            top: 0,
+            behavior: "instant"
+          });
+        });
+      });
+
+        // Handle search form submission
+        $("#searchForm").submit((e) => {
+          e.preventDefault(); // Prevent form submission
+      
+          // Get the search query from the input field
+          const searchQuery = $("#searchInput").val().trim();
+      
+          // Call the searchMessages function to filter and display the matching messages
+          searchMessages(searchQuery);
+        });
+      
+      function searchMessages(query) {
+        // Clear the previous search results
+        $("#messages").empty();
+      
+        // Send a GET request to retrieve the filtered messages
+        $.get('http://localhost:3000/messages', (data) => {
+          // Filter the messages based on the search query
+          const filteredMessages = data.filter((message) => {
+            // Perform case-insensitive search on both the name and message content
+            const nameMatch = message.name.toLowerCase().includes(query.toLowerCase());
+            const messageMatch = message.message.toLowerCase().includes(query.toLowerCase());
+            return nameMatch || messageMatch;
+          });
+      
+          // Display the filtered messages
+          filteredMessages.forEach(addMessages);
+        });
+      }
+      
+      
+    var socket = io();
+    socket.on('message', addMessages);
+</script>
+</body>
+</html>
