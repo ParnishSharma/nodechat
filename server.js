@@ -9,7 +9,7 @@ app.use(express.static(__dirname));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-var Message = mongoose.model('Message', new mongoose.Schema({ name: String, message: String }), 'messages');
+var Message = mongoose.model('Message', { name: String, message: String });
 
 const dbUrl = process.env.MONGODB_URI;
 
@@ -25,7 +25,6 @@ mongoose
 app.get('/messages', (req, res) => {
   Message.find({})
     .then((messages) => {
-      res.header('Content-Type', 'application/json');
       res.send(messages);
     })
     .catch((err) => {
@@ -36,7 +35,8 @@ app.get('/messages', (req, res) => {
 
 app.post('/messages', (req, res) => {
   var message = new Message(req.body);
-  message.save()
+  message
+    .save()
     .then(() => {
       io.emit('message', req.body);
       res.sendStatus(200);
@@ -59,7 +59,7 @@ app.delete('/messages', (req, res) => {
     });
 });
 
-const server = app.listen(process.env.PORT || 3000, () => {
+var server = http.listen(process.env.PORT || 3000, () => {
   console.log('Server is running at port', server.address().port);
 
   io.on('connection', (socket) => {
