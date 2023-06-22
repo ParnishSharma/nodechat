@@ -37,7 +37,6 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script>
@@ -60,13 +59,13 @@
       }
       
       function getMessages() {
-        $.get('https://nochapp.vercel.app/messages', (data) => {
+        $.get('https://nochapp-1mrt3f7zw-parnishsharma.vercel.app/messages', (data) => {
           data.forEach(addMessages);
         });
       }
       
       function sendMessage(message) {
-        $.post('https://nochapp.vercel.app/messages', message, () => {
+        $.post('https://nochapp-1mrt3f7zw-parnishsharma.vercel.app/messages', message, () => {
           $("#name").val(''); // Clear the name input field
           $("#message").val(''); // Clear the message textarea
           getMessages(); // Retrieve updated messages after saving
@@ -82,7 +81,7 @@
     
       function deleteChat() {
         $.ajax({
-          url: 'https://nochapp.vercel.app/messages',
+          url: 'https://nochapp-1mrt3f7zw-parnishsharma.vercel.app/messages',
           type: 'DELETE',
           success: () => {
             $("#messages").empty(); 
@@ -129,7 +128,7 @@
         $("#messages").empty();
       
         // Send a GET request to retrieve the filtered messages
-        $.get('https://nochapp.vercel.app/messages', (data) => {
+        $.get('https://nochapp-1mrt3f7zw-parnishsharma.vercel.app/messages', (data) => {
           // Filter the messages based on the search query
           const filteredMessages = data.filter((message) => {
             // Perform case-insensitive search on both the name and message content
@@ -144,8 +143,8 @@
       }
       
       
-    var socket = io();
-    socket.on('message', addMessages);
+      var socket = io('https://nochapp-1mrt3f7zw-parnishsharma.vercel.app');
+      socket.on('message', addMessages);
 </script>
 </body>
 </html>
