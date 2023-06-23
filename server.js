@@ -13,8 +13,7 @@ var Message = mongoose.model('Message', { name: String, message: String });
 
 const dbUrl = process.env.MONGODB_URI;
 
-mongoose
-  .connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log('MongoDB connected');
   })

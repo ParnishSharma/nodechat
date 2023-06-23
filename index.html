@@ -6,11 +6,11 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <nav class="navbar navbar-light bg-light">
+  <nav class="navbar navbar-light bg-white">
     <div class="container-fluid">
       <a class="navbar-brand">Nocha</a>
-      <ul>
-       <a href="contact.html"><li>contact me</li></a>
+      <ul class="contact">
+       <a href="contact.html"><li>Contact Me</li></a>
       </ul>
 
       <form id="searchForm" class="d-flex">
@@ -57,13 +57,13 @@
   }
 
   function getMessages() {
-    $.get('https://nochapp.vercel.app/messages', (data) => {
+    $.get('http://localhost:3000/messages', (data) => {
       data.forEach(addMessages);
     });
   }
 
   function sendMessage(message) {
-    $.post('https://nochapp.vercel.app/messages', message, () => {
+    $.post('http://localhost:3000/messages', message, () => {
       $("#name").val(''); // Clear the name input field
       $("#message").val(''); // Clear the message textarea
       getMessages(); // Retrieve updated messages after saving
@@ -79,7 +79,7 @@
 
   function deleteChat() {
     $.ajax({
-      url: 'https://nochapp.vercel.app/messages',
+      url: 'http://localhost:3000/messages',
       type: 'DELETE',
       success: () => {
         $("#messages").empty();
@@ -127,7 +127,7 @@
     $("#messages").empty();
 
     // Send a GET request to retrieve the filtered messages
-    $.get('https://nochapp.vercel.app/messages', (data) => {
+    $.get('http://localhost:3000/messages', (data) => {
       // Filter the messages based on the search query
       const filteredMessages = data.filter((message) => {
         // Perform case-insensitive search on both the name and message content
@@ -142,7 +142,7 @@
   }
 
 
-  var socket = io('https://nochapp.vercel.app');
+  var socket = io();
   socket.on('message', addMessages);
 </script>
 </body>
