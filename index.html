@@ -70,7 +70,6 @@
     $.post('/messages', message, () => {
       $("#name").val(''); // Clear the name input field
       $("#message").val(''); // Clear the message textarea
-      getMessages(); // Retrieve updated messages after saving
     });
   }
 
