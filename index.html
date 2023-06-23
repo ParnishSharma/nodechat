@@ -46,8 +46,7 @@
       };
       sendMessage(message);
     });
-    // Rest of the code...
-  });
+
 
   function addMessages(message) {
     $("#messages").append(`
@@ -57,7 +56,7 @@
   }
 
   function getMessages() {
-    $.get('http://nochapp.vercel.app/messages', (data) => {
+    $.get('http://localhost:3000/messages', (data) => {
       data.forEach(addMessages);
     });
   }
@@ -79,7 +78,7 @@
 
   function deleteChat() {
     $.ajax({
-      url: 'http://nochapp.vercel.app/messages',
+      url: 'http://localhost:3000/messages',
       type: 'DELETE',
       success: () => {
         $("#messages").empty();
@@ -127,7 +126,7 @@
     $("#messages").empty();
 
     // Send a GET request to retrieve the filtered messages
-    $.get('http://nochapp.vercel.app/messages', (data) => {
+    $.get('http://localhost:3000/messages', (data) => {
       // Filter the messages based on the search query
       const filteredMessages = data.filter((message) => {
         // Perform case-insensitive search on both the name and message content
