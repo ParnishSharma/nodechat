@@ -63,7 +63,7 @@
   }
 
   function sendMessage(message) {
-    $.post('http://nochapp.vercel.app/messages', message, () => {
+    $.post('http://localhost:3000/messages', message, () => {
       $("#name").val(''); // Clear the name input field
       $("#message").val(''); // Clear the message textarea
       getMessages(); // Retrieve updated messages after saving
