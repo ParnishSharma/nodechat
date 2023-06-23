@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
@@ -8,6 +9,7 @@ const mongoose = require('mongoose');
 app.use(express.static(__dirname));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cors());
 
 var Message = mongoose.model('Message', { name: String, message: String });
 

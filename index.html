@@ -57,29 +57,22 @@
   }
 
   function getMessages() {
-    $.get('http://localhost:3000/messages', (data) => {
+    $.get('https://nochapp.vercel.app/messages', (data) => {
       data.forEach(addMessages);
     });
   }
-
+  
   function sendMessage(message) {
-    $.post('http://localhost:3000/messages', message, () => {
+    $.post('https://nochapp.vercel.app/messages', message, () => {
       $("#name").val(''); // Clear the name input field
       $("#message").val(''); // Clear the message textarea
       getMessages(); // Retrieve updated messages after saving
     });
   }
-
-  $(document).ready(() => {
-    // Rest of the code...
-    $("#delete").click(() => {
-      deleteChat();
-    });
-  });
-
+  
   function deleteChat() {
     $.ajax({
-      url: 'http://localhost:3000/messages',
+      url: 'https://nochapp.vercel.app/messages',
       type: 'DELETE',
       success: () => {
         $("#messages").empty();
@@ -89,45 +82,13 @@
       }
     });
   }
-
-  document.addEventListener("DOMContentLoaded", function() {
-    var scrollToTopButton = document.getElementById("scrollToTopButton");
-
-    // Show the button when user scrolls beyond a certain point
-    window.addEventListener("scroll", function() {
-      if (window.pageYOffset > 100) {
-        scrollToTopButton.classList.add("show");
-      } else {
-        scrollToTopButton.classList.remove("show");
-      }
-    });
-
-    // Scroll to top when the button is clicked
-    scrollToTopButton.addEventListener("click", function() {
-      window.scrollTo({
-        top: 0,
-        behavior: "instant"
-      });
-    });
-  });
-
-  // Handle search form submission
-  $("#searchForm").submit((e) => {
-    e.preventDefault(); // Prevent form submission
-
-    // Get the search query from the input field
-    const searchQuery = $("#searchInput").val().trim();
-
-    // Call the searchMessages function to filter and display the matching messages
-    searchMessages(searchQuery);
-  });
-
+  
   function searchMessages(query) {
     // Clear the previous search results
     $("#messages").empty();
-
+  
     // Send a GET request to retrieve the filtered messages
-    $.get('http://localhost:3000/messages', (data) => {
+    $.get('https://nochapp.vercel.app/messages', (data) => {
       // Filter the messages based on the search query
       const filteredMessages = data.filter((message) => {
         // Perform case-insensitive search on both the name and message content
@@ -135,11 +96,12 @@
         const messageMatch = message.message.toLowerCase().includes(query.toLowerCase());
         return nameMatch || messageMatch;
       });
-
+  
       // Display the filtered messages
       filteredMessages.forEach(addMessages);
     });
   }
+  
 
 
   var socket = io();
