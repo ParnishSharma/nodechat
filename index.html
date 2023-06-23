@@ -57,13 +57,13 @@
   }
 
   function getMessages() {
-    $.get('http://localhost:3000/messages', (data) => {
+    $.get('/messages', (data) => {
       data.forEach(addMessages);
     });
   }
 
   function sendMessage(message) {
-    $.post('http://localhost:3000/messages', message, () => {
+    $.post('/messages', message, () => {
       $("#name").val(''); // Clear the name input field
       $("#message").val(''); // Clear the message textarea
       getMessages(); // Retrieve updated messages after saving
@@ -79,7 +79,7 @@
 
   function deleteChat() {
     $.ajax({
-      url: 'http://localhost:3000/messages',
+      url: '/messages',
       type: 'DELETE',
       success: () => {
         $("#messages").empty();
@@ -127,7 +127,7 @@
     $("#messages").empty();
 
     // Send a GET request to retrieve the filtered messages
-    $.get('http://localhost:3000/messages', (data) => {
+    $.get('/messages', (data) => {
       // Filter the messages based on the search query
       const filteredMessages = data.filter((message) => {
         // Perform case-insensitive search on both the name and message content
