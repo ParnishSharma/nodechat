@@ -23,7 +23,7 @@ mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
     console.error('MongoDB connection error:', err);
   });
 
-app.get('https://nochapp-ho4dq8f4h-parnishsharma.vercel.app/messages', (req, res) => {
+app.get('https://nochapp-parnishsharma.vercel.app/messages', (req, res) => {
   Message.find({})
     .then((messages) => {
       res.send(messages);
@@ -34,7 +34,7 @@ app.get('https://nochapp-ho4dq8f4h-parnishsharma.vercel.app/messages', (req, res
     });
 });
 
-app.post('https://nochapp-ho4dq8f4h-parnishsharma.vercel.app/messages', (req, res) => {
+app.post('https://nochapp-parnishsharma.vercel.app/messages', (req, res) => {
   var message = new Message(req.body);
   message
     .save()
@@ -48,7 +48,7 @@ app.post('https://nochapp-ho4dq8f4h-parnishsharma.vercel.app/messages', (req, re
     });
 });
 
-app.delete('https://nochapp-ho4dq8f4h-parnishsharma.vercel.app/messages', (req, res) => {
+app.delete('https://nochapp-parnishsharma.vercel.app/messages', (req, res) => {
   Message.deleteMany({})
     .then(() => {
       io.emit('message', {}); // Emit an empty message to clear the chat on the client side

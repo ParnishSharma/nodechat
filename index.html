@@ -57,13 +57,13 @@
   }
 
   function getMessages() {
-    $.get('https://nochapp-ho4dq8f4h-parnishsharma.vercel.app/messages', (data) => {
+    $.get('https://nochapp-parnishsharma.vercel.app/messages', (data) => {
       data.forEach(addMessages);
     });
   }
 
   function sendMessage(message) {
-    $.post('https://nochapp-ho4dq8f4h-parnishsharma.vercel.app/messages', message, () => {
+    $.post('https://nochapp-parnishsharma.vercel.app/messages', message, () => {
       $("#name").val(''); // Clear the name input field
       $("#message").val(''); // Clear the message textarea
       getMessages(); // Retrieve updated messages after saving
@@ -79,7 +79,7 @@
 
   function deleteChat() {
     $.ajax({
-      url: 'https://nochapp-ho4dq8f4h-parnishsharma.vercel.app/messages',
+      url: 'https://nochapp-parnishsharma.vercel.app/messages',
       type: 'DELETE',
       success: () => {
         $("#messages").empty();
@@ -127,7 +127,7 @@
     $("#messages").empty();
 
     // Send a GET request to retrieve the filtered messages
-    $.get('https://nochapp-ho4dq8f4h-parnishsharma.vercel.app/messages', (data) => {
+    $.get('https://nochapp-parnishsharma.vercel.app/messages', (data) => {
       // Filter the messages based on the search query
       const filteredMessages = data.filter((message) => {
         // Perform case-insensitive search on both the name and message content
